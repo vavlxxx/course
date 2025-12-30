@@ -1,11 +1,36 @@
+### Приложение для бронированием
+
+Небольшое приложение для управления бронированием номеров в отеле
+
 ## Общая настройка
+
+Для начала нужно создать единую Docker сеть для возможности взаимодействия контейнеров
 
 ```bash
 # создание единой docker-сети
 docker network create booknet
 ```
 
-### PostgreSQL, Redis, Nginx (Linux)
+Запустить все контейнеры разом можно при помощи Docker Compose
+
+```bash
+# собрать все контейнеры
+docker compose build
+
+# запустить все контейнеры
+docker compose up
+```
+
+### Ручной запуск
+
+Можно запустить все контейнеры вручную
+
+```bash
+# создание docker-образа приложения
+docker build -t booking_app_image .
+```
+
+#### PostgreSQL, Redis, Nginx (Linux)
 
 ```bash
 # контейнер для PosgreSQL 17
@@ -34,7 +59,7 @@ docker run --name booking_nginx \
     --rm -p 80:80 -p 443:443 -d nginx
 ```
 
-### PostgreSQL, Redis, Nginx (Windows)
+#### PostgreSQL, Redis, Nginx (Windows)
 
 ```bash
 # контейнер для PosgreSQL 17
@@ -62,14 +87,7 @@ docker run --name booking_nginx ^
     --rm -p 80:80 -d nginx
 ```
 
-## Запуск с помощью Dockerfile
-
-```bash
-# создание docker-образа приложения
-docker build -t booking_app_image .
-```
-
-### Запуск контейнеров (Linux)
+#### Запуск контейнеров (Linux)
 
 ```bash
 # контейнер для FastAPI
@@ -118,15 +136,4 @@ docker run --name booking_celery_beat ^
     --network=booknet ^
     booking_app_image ^
     poetry run celery --app=src.tasks.app:celery_app beat -l INFO
-```
-
-
-## Запуск с помощью  Docker-compose
-
-```bash
-# собрать все контейнеры
-docker compose build
-
-# запустить все контейнеры
-docker compose up
 ```
